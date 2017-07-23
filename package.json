@@ -1,0 +1,18 @@
+{
+  "name": "jsvm",
+  "private": true,
+  "version": "0.0.1",
+  "description": "A virtual machine written in JavaScript.",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/msrose/jsvm.git"
+  },
+  "author": "Michael Rose <michael_rose@outlook.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/msrose/jsvm/issues"
+  },
+  "homepage": "https://github.com/msrose/jsvm#readme"
+}
