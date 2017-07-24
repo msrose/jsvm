@@ -1,8 +1,9 @@
 'use strict';
 
-const { WORD_SIZE, REGISTER_COUNT, INSTRUCTIONS: INSTRS, WordWidthMemory, ByteWidthMemory } = require('./constants');
-const { getMemoryValue, setMemoryValue, loadFromBuffer, getElementsPerWord } = require('./memory');
+const { WORD_SIZE, REGISTER_COUNT, WordWidthMemory, ByteWidthMemory } = require('./constants');
+const { getMemoryValue, loadFromBuffer, getElementsPerWord } = require('./memory');
 const decoders = require('./decoders');
+const executers = require('./executers');
 
 // Default to byte-width so memory is byte-addressable
 // Using word-width will be useful for debugging
@@ -29,19 +30,14 @@ const decode = ir => {
 };
 
 const execute = (operation, registers, memory, pc) => {
-  switch(operation.opcode) {
-    case INSTRS.LIS: {
-      const value = getMemoryValue(memory, pc);
-      setMemoryValue(registers[operation.dest], 0, value);
-      pc = increment(pc);
-      break;
-    }
-    case INSTRS.ADD: {
-      const { op1, op2, dest } = operation;
-      const sum = getMemoryValue(registers[op1]) + getMemoryValue(registers[op2]);
-      setMemoryValue(registers[dest], 0, sum);
-      break;
-    }
+  const { opcode } = operation;
+  const executer = executers.get(opcode);
+  if(!executer) {
+    throw new Error(`No executer for operation with opcode ${opcode}`);
+  }
+  const nextPC = executer(operation, registers, memory, pc, increment);
+  if(Number.isInteger(nextPC)) {
+    pc = nextPC;
   }
   return pc;
 };
