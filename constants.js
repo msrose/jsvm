@@ -6,7 +6,7 @@ module.exports = {
   WordWidthMemory: Uint16Array,
   ByteWidthMemory: Uint8Array,
   REGISTER_COUNT: 4,
-  INSTRUCTIONS: {
+  INSTRS: {
     LIS: 0,
     ADD: 1
   }

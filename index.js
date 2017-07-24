@@ -2,11 +2,10 @@
 
 const { WORD_SIZE, REGISTER_COUNT, WordWidthMemory, ByteWidthMemory } = require('./constants');
 const { getMemoryValue, loadFromBuffer, getElementsPerWord } = require('./memory');
-const decoders = require('./decoders');
-const executers = require('./executers');
+const instrs = require('./instrs');
 
 // Default to byte-width so memory is byte-addressable
-// Using word-width will be useful for debugging
+// Using word-width is useful for debugging, since instruction length matches memory width
 const Memory = process.argv.includes('--word-width') ? WordWidthMemory : ByteWidthMemory;
 const elementsPerWord = getElementsPerWord(Memory.BYTES_PER_ELEMENT);
 
@@ -20,7 +19,7 @@ const increment = pc => {
 
 const decode = ir => {
   const opcode = ir & 0x000f;
-  const decoder = decoders.get(opcode);
+  const decoder = instrs.getDecoderByOpcode(opcode);
   if(!decoder) {
     throw new Error(`Unrecognized opcode ${opcode}`);
   }
@@ -31,7 +30,7 @@ const decode = ir => {
 
 const execute = (operation, registers, memory, pc) => {
   const { opcode } = operation;
-  const executer = executers.get(opcode);
+  const executer = instrs.getExecuterByOpcode(opcode);
   if(!executer) {
     throw new Error(`No executer for operation with opcode ${opcode}`);
   }
