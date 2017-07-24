@@ -7,14 +7,13 @@ const instrs = require('./instrs');
 // Default to byte-width so memory is byte-addressable
 // Using word-width is useful for debugging, since instruction length matches memory width
 const Memory = process.argv.includes('--word-width') ? WordWidthMemory : ByteWidthMemory;
-const elementsPerWord = getElementsPerWord(Memory.BYTES_PER_ELEMENT);
 
 const fetch = (memory, pc) => {
   return getMemoryValue(memory, pc);
 };
 
-const increment = pc => {
-  return pc + elementsPerWord;
+const increment = (pc, memory) => {
+  return pc + getElementsPerWord(memory.BYTES_PER_ELEMENT);
 };
 
 const decode = ir => {
@@ -43,11 +42,12 @@ const execute = (operation, registers, memory, pc) => {
 
 const runCycle = (memory, pc, registers) => {
   const ir = fetch(memory, pc);
-  pc = increment(pc);
+  pc = increment(pc, memory);
   const operation = decode(ir);
   return execute(operation, registers, memory, pc);
 };
 
+const elementsPerWord = getElementsPerWord(Memory.BYTES_PER_ELEMENT);
 const registers = Array(REGISTER_COUNT).fill().map(() => new Memory(elementsPerWord));
 const memory = new Memory(2 ** WORD_SIZE * elementsPerWord);
 

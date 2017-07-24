@@ -13,7 +13,7 @@ const decoder = (ir) => {
 const executer = ({ dest }, registers, memory, pc, increment) => {
   const value = getMemoryValue(memory, pc);
   setMemoryValue(registers[dest], 0, value);
-  pc = increment(pc);
+  pc = increment(pc, memory);
   return pc;
 };
 
