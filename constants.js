@@ -3,5 +3,11 @@
 module.exports = {
   WORD_SIZE: 16,
   BYTE_SIZE: 8,
-  REGISTER_COUNT: 4
+  WordWidthMemory: Uint16Array,
+  ByteWidthMemory: Uint8Array,
+  REGISTER_COUNT: 4,
+  INSTRUCTIONS: {
+    LIS: 0,
+    ADD: 1
+  }
 };

@@ -1,15 +1,13 @@
 'use strict';
 
-const { WORD_SIZE, REGISTER_COUNT } = require('./constants');
+const { WORD_SIZE, REGISTER_COUNT, INSTRUCTIONS: INSTRS, WordWidthMemory, ByteWidthMemory } = require('./constants');
 const { getMemoryValue, setMemoryValue, loadFromBuffer, getElementsPerWord } = require('./memory');
+const decoders = require('./decoders');
 
-const Memory = Uint8Array; // or Uint16Array
+// Default to byte-width so memory is byte-addressable
+// Using word-width will be useful for debugging
+const Memory = process.argv.includes('--word-width') ? WordWidthMemory : ByteWidthMemory;
 const elementsPerWord = getElementsPerWord(Memory.BYTES_PER_ELEMENT);
-
-const INSTRS = {
-  LIS: 0,
-  ADD: 1
-};
 
 const fetch = (memory, pc) => {
   return getMemoryValue(memory, pc);
@@ -21,32 +19,25 @@ const increment = pc => {
 
 const decode = ir => {
   const opcode = ir & 0x000f;
-  const instr = { opcode };
-  switch(opcode) {
-    case INSTRS.LIS:
-      instr.dest = (ir & 0x00f0) >> 4;
-      break;
-    case INSTRS.ADD:
-      instr.op1 = (ir & 0xf000) >> 12;
-      instr.op2 = (ir & 0x0f00) >> 8;
-      instr.dest = (ir & 0x00f0) >> 4;
-      break;
-    default:
-      throw new Error(`Unrecognized opcode ${opcode}`);
+  const decoder = decoders.get(opcode);
+  if(!decoder) {
+    throw new Error(`Unrecognized opcode ${opcode}`);
   }
-  return instr;
+  const operation = decoder(ir);
+  operation.opcode = opcode;
+  return operation;
 };
 
-const execute = (instr, registers, memory, pc) => {
-  switch(instr.opcode) {
+const execute = (operation, registers, memory, pc) => {
+  switch(operation.opcode) {
     case INSTRS.LIS: {
       const value = getMemoryValue(memory, pc);
-      setMemoryValue(registers[instr.dest], 0, value);
+      setMemoryValue(registers[operation.dest], 0, value);
       pc = increment(pc);
       break;
     }
     case INSTRS.ADD: {
-      const { op1, op2, dest } = instr;
+      const { op1, op2, dest } = operation;
       const sum = getMemoryValue(registers[op1]) + getMemoryValue(registers[op2]);
       setMemoryValue(registers[dest], 0, sum);
       break;
@@ -58,8 +49,8 @@ const execute = (instr, registers, memory, pc) => {
 const runCycle = (memory, pc, registers) => {
   const ir = fetch(memory, pc);
   pc = increment(pc);
-  const instr = decode(ir);
-  return execute(instr, registers, memory, pc);
+  const operation = decode(ir);
+  return execute(operation, registers, memory, pc);
 };
 
 const registers = Array(REGISTER_COUNT).fill().map(() => new Memory(elementsPerWord));
