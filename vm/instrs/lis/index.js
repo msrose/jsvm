@@ -1,8 +1,8 @@
 'use strict';
 
-const { LIS } = require('../constants').INSTRS;
+const { LIS } = require('../../constants').INSTRS;
 
-const { getMemoryValue, setMemoryValue } = require('../memory');
+const { getMemoryValue, setMemoryValue } = require('../../memory');
 
 const decoder = (ir) => {
   return {

@@ -23,7 +23,7 @@ const run = program => {
     pc = runCPUCycle(memory, pc, registers);
   }
 
-  console.log({ registers });
+  return registers;
 };
 
 module.exports = {

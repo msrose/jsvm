@@ -5,7 +5,8 @@
   "description": "A virtual machine written in JavaScript.",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "jest"
   },
   "engines": {
     "node": ">=8",
@@ -23,6 +24,10 @@
   "homepage": "https://github.com/msrose/jsvm#readme",
   "devDependencies": {
     "eslint": "^4.3.0",
-    "eslint-config-msrose": "^1.0.0"
+    "eslint-config-msrose": "^1.0.0",
+    "jest": "^20.0.4"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }

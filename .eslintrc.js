@@ -5,7 +5,8 @@ module.exports = {
     ecmaVersion: 2017
   },
   env: {
-    node: true
+    node: true,
+    jest: true
   },
   extends: 'msrose',
   rules: {
