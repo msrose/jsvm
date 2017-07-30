@@ -1,7 +1,5 @@
 'use strict';
 
-const { LIS } = require('../../constants').INSTRS;
-
 const { getMemoryValue, setMemoryValue } = require('../../memory');
 
 const decoder = (ir) => {
@@ -18,7 +16,7 @@ const executer = ({ dest }, registers, memory, pc, increment) => {
 };
 
 module.exports = {
-  opcode: LIS,
+  opcode: 0,
   decoder,
   executer
 };

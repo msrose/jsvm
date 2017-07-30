@@ -1,7 +1,5 @@
 'use strict';
 
-const { ADD } = require('../../constants').INSTRS;
-
 const { getMemoryValue, setMemoryValue } = require('../../memory');
 
 const decoder = (ir) => {
@@ -18,7 +16,7 @@ const executer = ({ op1, op2, dest }, registers) => {
 };
 
 module.exports = {
-  opcode: ADD,
+  opcode: 1,
   decoder,
   executer
 };

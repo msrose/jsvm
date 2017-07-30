@@ -5,9 +5,5 @@ module.exports = {
   BYTE_SIZE: 8,
   WordWidthMemory: Uint16Array,
   ByteWidthMemory: Uint8Array,
-  REGISTER_COUNT: 4,
-  INSTRS: {
-    LIS: 0,
-    ADD: 1
-  }
+  REGISTER_COUNT: 16
 };
