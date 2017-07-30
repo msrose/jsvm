@@ -1,12 +1,8 @@
 'use strict';
 
-const { WORD_SIZE, BYTE_SIZE, WordWidthMemory, ByteWidthMemory } = require('./constants');
+const { WORD_SIZE, BYTE_SIZE } = require('./constants');
 
 const BYTES_PER_WORD = WORD_SIZE / BYTE_SIZE;
-
-// Default to byte-width so memory is byte-addressable
-// Using word-width is useful for debugging, since instruction length matches memory width
-const Memory = process.argv.includes('--word-width') ? WordWidthMemory : ByteWidthMemory;
 
 const getElementsPerWord = (bytesPerElement) => {
   return BYTES_PER_WORD / bytesPerElement;
@@ -43,7 +39,6 @@ const loadFromBuffer = (memory, program) => {
 };
 
 module.exports = {
-  Memory,
   getMemoryValue,
   setMemoryValue,
   loadFromBuffer,
